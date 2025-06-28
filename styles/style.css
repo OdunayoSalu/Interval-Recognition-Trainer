@@ -1,0 +1,115 @@
+body {
+  font-family: sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  margin: 0;
+}
+
+canvas {
+  border: 1px solid #ccc;
+  margin: 10px;
+}
+
+button {
+  padding: 10px 20px;
+  font-size: 16px;
+  margin: 5px;
+}
+
+#feedback {
+  font-size: 24px;
+  font-weight: bold;
+  color: green;
+}
+
+.intervals-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  max-width: 600px;
+}
+
+.intervals-container label {
+  margin: 5px 10px;
+}
+
+.directions-container {
+  margin: 10px 0;
+}
+
+.directions-container label {
+  margin: 0 10px;
+}
+
+/* Stack range sliders */
+/* === Two-thumb Slider === */
+.range-selector-container {
+  position: relative;
+  width: 300px;
+  height: 50px;
+  padding-top: 20px;
+  margin: 10px 0 20px 0;
+}
+
+.slider-track, #slider-range-fill {
+  position: absolute;
+  width: 100%;
+  height: 5px;
+  border-radius: 3px;
+  top: 30px;
+}
+
+.slider-track {
+  background-color: #ddd;
+  z-index: 1;
+}
+
+#slider-range-fill {
+  background-color: #3a86ff;
+  z-index: 2;
+}
+
+.range-selector-container input[type="range"] {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  width: 100%;
+  outline: none;
+  position: absolute;
+  margin: 0;
+  padding: 0;
+  top: 30px;
+  background-color: transparent;
+  pointer-events: none;
+  z-index: 3;
+}
+
+.range-selector-container input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  background-color: #3a86ff;
+  border-radius: 50%;
+  border: 2px solid white;
+  box-shadow: 0 0 3px rgba(0,0,0,0.4);
+  cursor: pointer;
+  pointer-events: auto;
+  margin-top: -7px; /* Center thumb on track */
+}
+
+.range-selector-container input[type="range"]::-moz-range-thumb {
+  -moz-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  background-color: #3a86ff;
+  border-radius: 50%;
+  border: 2px solid white;
+  box-shadow: 0 0 3px rgba(0,0,0,0.4);
+  cursor: pointer;
+  pointer-events: auto;
+}

@@ -1,0 +1,76 @@
+/* Custom UI styles */
+
+section{
+  width:90%;
+  max-width:800px;
+  margin:20px auto;
+}
+
+#training{
+  text-align:center;
+}
+
+.btn-group{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  justify-content:center;
+}
+
+.primary-btn{
+  background-color:#1e73be;
+  border:none;
+  color:#fff;
+  padding:10px 22px;
+  font-size:16px;
+  border-radius:6px;
+  cursor:pointer;
+  transition:background-color 0.2s ease;
+}
+.primary-btn:hover{
+  background-color:#145a96;
+}
+
+/* Large rounded checkboxes */
+input[type="checkbox"]{
+  appearance:none;
+  width:24px;
+  height:24px;
+  border-radius:6px;
+  background:#ccc;
+  cursor:pointer;
+  position:relative;
+  outline:none;
+  vertical-align:middle;
+  transition:background 0.2s ease;
+}
+input[type="checkbox"]:checked{
+  background:#1e73be;
+}
+
+/* Ensure label text aligns nicely next to bigger checkbox */
+label.toggle-label{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  font-size:16px;
+  margin:6px 8px;
+}
+
+.directions-container label,
+.intervals-container label{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  background:#f0f0f0;
+  padding:6px 12px;
+  border-radius:8px;
+  margin:4px;
+  cursor:pointer;
+  transition:background 0.2s ease;
+}
+.directions-container input:checked + span,
+.intervals-container input:checked + span{
+  background:#1e73be;
+  color:#fff;
+}

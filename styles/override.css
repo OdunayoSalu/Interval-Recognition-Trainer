@@ -1,0 +1,130 @@
+/* Override styles per latest UI requests */
+
+/* Responsive Design for Mobile (iPhone) */
+@media (max-width: 600px) {
+  body {
+    font-size: 16px;
+    padding: 0 4px;
+  }
+  section, #options {
+    width: 100%;
+    max-width: 100vw;
+    margin: 8px auto;
+    padding: 0;
+  }
+  .btn-group {
+    flex-direction: column;
+    gap: 10px;
+    align-items: stretch;
+  }
+  .primary-btn {
+    width: 100%;
+    font-size: 18px;
+    padding: 12px 0;
+  }
+  .range-selector-container {
+    flex-direction: column;
+    min-width: 0;
+    width: 100%;
+    padding: 0 2px;
+  }
+  .intervals-container {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px 8px;
+    min-width: 0;
+    width: 100%;
+    max-width: 100vw;
+  }
+  .intervals-container label {
+    font-size: 15px;
+    padding: 8px 6px;
+    min-width: 0;
+    width: 100%;
+  }
+  .directions-container {
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+    min-width: 0;
+  }
+  label.toggle-label {
+    font-size: 15px;
+    gap: 6px;
+    margin: 4px 0;
+  }
+  #volumeMeter {
+    width: 98vw !important;
+    max-width: 100vw;
+    min-width: 0;
+    height: 40px;
+    display: block;
+    margin: 0 auto 10px auto;
+  }
+  input[type="range"] {
+    width: 98vw !important;
+    max-width: 100vw;
+    min-width: 0;
+  }
+}
+
+/* Desktop fallback (default) remains unchanged */
+
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;700&display=swap');
+
+body{
+  font-family:'Quicksand', Arial, sans-serif;
+}
+
+.section-label{
+  font-weight:700;
+  display:block;
+  margin-top:16px;
+}
+
+/* Primary buttons now outlined style */
+.primary-btn{
+  background:#fff;
+  color:#000;
+  border:2px solid #000;
+  border-radius:6px;
+  padding:10px 22px;
+  font-size:16px;
+  cursor:pointer;
+  transition:background 0.2s ease,color 0.2s ease;
+}
+.primary-btn:hover{
+  background:#000;
+  color:#fff;
+}
+
+/* Interval buttons grid */
+.intervals-container{
+  display:grid;
+  grid-template-columns:repeat(4, 1fr);
+  gap:8px;
+  max-width:600px;
+}
+.intervals-container label{
+  justify-content:flex-start;
+  align-items:center;
+  width:100%;
+  margin:0 0 4px 0;
+  gap:10px;
+  background:#f0f0f0;
+  padding:6px 12px;
+  border-radius:8px;
+  margin-right:8px;
+  box-sizing:border-box;
+  display:flex;
+}
+
+.intervals-container{
+  display:grid;
+  grid-template-columns:repeat(4, 1fr);
+  gap:8px 12px;
+  max-width:600px;
+}
+
+.intervals-container input[type="checkbox"]{
+  margin-right:10px;
+}
