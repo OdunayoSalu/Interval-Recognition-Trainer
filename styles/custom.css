@@ -1,9 +1,27 @@
 /* Custom UI styles */
 
+body{
+  align-items:flex-start; /* Override default centering */
+  width:90%;
+  max-width:800px;
+  margin:20px auto;
+}
+
+.settings-title {
+  text-align: left !important;
+  margin-left: 0;
+}
+
 section{
   width:90%;
   max-width:800px;
   margin:20px auto;
+}
+
+.settings-header-container {
+  width:90%;
+  max-width:800px;
+  margin:20px auto 0 auto;
 }
 
 #training{

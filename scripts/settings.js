@@ -1,6 +1,4 @@
-if (window.location.pathname.endsWith('index.html') || window.location.pathname === '/' || window.location.pathname === '/index.html') {
-  window.location.replace('settings.html');
-}
+
 document.addEventListener('DOMContentLoaded', () => {
   // --- duplicate constants (small overhead) ---
   const intervals = {
@@ -50,8 +48,10 @@ document.addEventListener('DOMContentLoaded', () => {
     maxLabel.textContent = midiToName(sliderIndexToMidi(parseInt(maxSlider.value)));
   }
   function updateFill() {
-    const minP = (minSlider.value / minSlider.max) * 100;
-    const maxP = (maxSlider.value / maxSlider.max) * 100;
+    const minVal = parseInt(minSlider.value);
+    const maxVal = parseInt(maxSlider.value);
+    const minP = ((minVal - minSlider.min) / (minSlider.max - minSlider.min)) * 100;
+    const maxP = ((maxVal - minSlider.min) / (minSlider.max - minSlider.min)) * 100;
     rangeFill.style.left = `${minP}%`;
     rangeFill.style.width = `${maxP - minP}%`;
   }

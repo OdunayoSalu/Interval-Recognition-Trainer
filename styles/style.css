@@ -2,10 +2,11 @@ body {
   font-family: sans-serif;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 100vh;
+  align-items: center; /* Horizontally center content */
+  min-height: 100vh; /* Allow body to grow taller than the screen */
   margin: 0;
+  padding: 20px 0; /* Add some vertical padding */
+  box-sizing: border-box;
 }
 
 canvas {

@@ -1,6 +1,6 @@
 // If no saved settings, redirect to settings page
 if (!localStorage.getItem('trainerSettings')) {
-  window.location.replace('settings.html');
+  window.location.replace('index.html');
 }
 
 const AudioContext = window.AudioContext || window.webkitAudioContext;
@@ -206,7 +206,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const settingsBtn = document.getElementById('settingsBtn');
   if (settingsBtn) {
     settingsBtn.addEventListener('click', () => {
-      window.location.href = 'settings.html';
+      window.location.href = 'index.html';
     });
   }
 });
