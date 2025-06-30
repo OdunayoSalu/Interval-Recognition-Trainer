@@ -226,14 +226,32 @@ async function preloadSamples() {
 
 
 // Initialize everything when the page loads
-document.addEventListener('DOMContentLoaded', async () => {
-  await initAudio(); // Initialize audio first
-  loadSettings();
-  updateQuestionCounter();
-  newQuestion();
-
-
+document.addEventListener('DOMContentLoaded', () => {
+  const startPlayingBtn = document.getElementById('startPlayingBtn');
+  const checkAnswerBtn = document.getElementById('checkAnswer');
+  const replayReferenceBtn = document.getElementById('replayReference');
+  const nextQuestionBtn = document.getElementById('nextQuestion');
   const settingsBtn = document.getElementById('settingsBtn');
+
+  // Add listener to the start button
+  startPlayingBtn.addEventListener('click', async () => {
+    // 1. Initialize audio and mic. This click is the user interaction needed by browsers.
+    await initAudio();
+
+    // 2. Hide start button, show other buttons
+    startPlayingBtn.style.display = 'none';
+    checkAnswerBtn.style.display = 'inline-block';
+    replayReferenceBtn.style.display = 'inline-block';
+    nextQuestionBtn.style.display = 'inline-block';
+    settingsBtn.style.display = 'inline-block';
+
+    // 3. Load settings and start the first question
+    loadSettings();
+    updateQuestionCounter();
+    newQuestion();
+  });
+
+  // Attach the settings button listener
   if (settingsBtn) {
     settingsBtn.addEventListener('click', () => {
       window.location.href = 'index.html';
