@@ -43,47 +43,64 @@ const samples = new Map();
 // Function to initialize audio context
 async function initAudio() {
   try {
-    // Create audio context
+    // Create audio context but don't start it yet
     audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    console.log('Audio context initialized');
+    console.log('Audio context created (suspended)');
     
     // Load the correct sound effect
     correctAudio = new Audio('Sound Effects/Correct.mp3');
-    // iOS requires this to be set for programmatic playback
-    correctAudio.load();
+    correctAudio.preload = 'auto';
     
     // Start loading samples
     await preloadSamples();
     console.log('Samples loaded');
     
-    // On iOS, we need user interaction to play audio
-    const unlockAudio = () => {
-      // Play a silent sound to unlock audio
-      const buffer = audioCtx.createBuffer(1, 1, 22050);
-      const source = audioCtx.createBufferSource();
-      source.buffer = buffer;
-      source.connect(audioCtx.destination);
-      source.start(0);
+    // Function to resume audio context and unlock audio
+    const unlockAudio = async () => {
+      try {
+        // Resume the audio context (required after user interaction)
+        if (audioCtx.state === 'suspended') {
+          await audioCtx.resume();
+          console.log('Audio context resumed');
+        }
+        
+        // Play a silent buffer to ensure audio is fully unlocked
+        const buffer = audioCtx.createBuffer(1, 1, 22050);
+        const source = audioCtx.createBufferSource();
+        source.buffer = buffer;
+        source.connect(audioCtx.destination);
+        source.start(0);
+        
+        console.log('Audio unlocked');
+        return true;
+      } catch (e) {
+        console.error('Error unlocking audio:', e);
+        return false;
+      }
+    };
+    
+    // Set up user interaction handler
+    const handleFirstInteraction = async () => {
+      await unlockAudio();
+      // Remove these event listeners after first interaction
+      document.removeEventListener('click', handleFirstInteraction);
+      document.removeEventListener('touchstart', handleFirstInteraction);
       
-      // Previously we attempted to play the correct sound at zero volume to unlock iOS audio.
-      // This caused an audible blip on some devices. Instead, rely solely on the silent
-      // Web Audio buffer above to unlock the context. We will not touch the correctAudio
-      // instance until it needs to be played for real.
-      /* no-op: removed correctAudio silent unlock */
+      // Preload the correct sound after first interaction
+      try {
+        await correctAudio.load();
+        console.log('Correct sound preloaded');
+      } catch (e) {
+        console.error('Error preloading correct sound:', e);
+      }
     };
     
-    // Try to unlock audio immediately (works on most browsers)
-    unlockAudio();
+    // Set up interaction listeners
+    document.addEventListener('click', handleFirstInteraction, { once: true });
+    document.addEventListener('touchstart', handleFirstInteraction, { once: true });
     
-    // Also set up a click handler to unlock audio on first user interaction
-    const unlockOnInteraction = () => {
-      unlockAudio();
-      document.removeEventListener('click', unlockOnInteraction);
-      document.removeEventListener('touchstart', unlockOnInteraction);
-    };
-    
-    document.addEventListener('click', unlockOnInteraction, { once: true });
-    document.addEventListener('touchstart', unlockOnInteraction, { once: true });
+    // Try to unlock immediately (will work on some browsers)
+    unlockAudio().catch(console.error);
     
   } catch (error) {
     console.error('Error initializing audio:', error);
@@ -517,8 +534,25 @@ navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
           correctLocked = true;
           // Play correct sound effect
           if (correctAudio) {
-            correctAudio.currentTime = 0;
-            correctAudio.play().catch(e => console.log('Audio play failed:', e));
+            try {
+              // Ensure we're at the start and play
+              correctAudio.currentTime = 0;
+              const playPromise = correctAudio.play();
+              
+              // Handle any play errors
+              if (playPromise !== undefined) {
+                playPromise.catch(error => {
+                  console.log('Audio play failed, trying to unlock audio:', error);
+                  // If play failed, try to unlock audio and play again
+                  unlockAudio().then(() => {
+                    correctAudio.currentTime = 0;
+                    correctAudio.play().catch(e => console.error('Still failed to play:', e));
+                  });
+                });
+              }
+            } catch (e) {
+              console.error('Error playing correct sound:', e);
+            }
           }
           if (autoNextEnabled) {
             setTimeout(() => {
