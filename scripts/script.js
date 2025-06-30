@@ -47,30 +47,46 @@ async function initAudio() {
     audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     console.log('Audio context initialized');
     
+    // Load the correct sound effect
+    correctAudio = new Audio('Sound Effects/Correct.mp3');
+    // iOS requires this to be set for programmatic playback
+    correctAudio.load();
+    
     // Start loading samples
     await preloadSamples();
     console.log('Samples loaded');
     
-    // Unlock audio context with user interaction
-    const unlockButton = document.createElement('button');
-    unlockButton.style.display = 'none';
-    document.body.appendChild(unlockButton);
+    // On iOS, we need user interaction to play audio
+    const unlockAudio = () => {
+      // Play a silent sound to unlock audio
+      const buffer = audioCtx.createBuffer(1, 1, 22050);
+      const source = audioCtx.createBufferSource();
+      source.buffer = buffer;
+      source.connect(audioCtx.destination);
+      source.start(0);
+      
+      // Also play the correct sound silently to unlock it
+      correctAudio.volume = 0;
+      correctAudio.play().then(() => {
+        correctAudio.pause();
+        correctAudio.currentTime = 0;
+        correctAudio.volume = 1;
+      }).catch(e => console.log('Initial silent play failed (this is ok):', e));
+    };
     
-    // Wait for user interaction
-    const unlockPromise = new Promise((resolve) => {
-      unlockButton.addEventListener('click', () => {
-        audioCtx.resume().then(() => {
-          unlockButton.remove();
-          resolve();
-        });
-      });
-    });
+    // Try to unlock audio immediately (works on most browsers)
+    unlockAudio();
     
-    // Simulate user interaction
-    unlockButton.click();
+    // Also set up a click handler to unlock audio on first user interaction
+    const unlockOnInteraction = () => {
+      unlockAudio();
+      document.removeEventListener('click', unlockOnInteraction);
+      document.removeEventListener('touchstart', unlockOnInteraction);
+    };
     
-    await unlockPromise;
-    console.log('Audio context unlocked');
+    document.addEventListener('click', unlockOnInteraction, { once: true });
+    document.addEventListener('touchstart', unlockOnInteraction, { once: true });
+    
   } catch (error) {
     console.error('Error initializing audio:', error);
   }
@@ -195,7 +211,8 @@ async function preloadSamples() {
 
 
 // Initialize everything when the page loads
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+  await initAudio(); // Initialize audio first
   loadSettings();
   updateQuestionCounter();
   newQuestion();
@@ -404,6 +421,9 @@ function newQuestion() {
 
 const canvas = document.getElementById("volumeMeter");
 const canvasCtx = canvas.getContext("2d");
+let analyser;
+let microphone;
+let isListening = false;
 const detectedNoteEl = document.getElementById("detectedNote");
 const feedbackEl = document.getElementById("feedback");
 
@@ -500,11 +520,10 @@ navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
           feedbackEl.innerText = `Correct! That was a ${currentInterval} ${currentDirection}`;
           correctLocked = true;
           // Play correct sound effect
-          if (!correctAudio) {
-            correctAudio = new Audio('Sound Effects/Correct.mp3');
+          if (correctAudio) {
+            correctAudio.currentTime = 0;
+            correctAudio.play().catch(e => console.log('Audio play failed:', e));
           }
-          correctAudio.currentTime = 0;
-          correctAudio.play();
           if (autoNextEnabled) {
             setTimeout(() => {
               correctLocked = false;

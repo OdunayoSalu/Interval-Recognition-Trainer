@@ -53,10 +53,14 @@
     margin: 4px 0;
   }
   #volumeMeter {
-    width: 90%; /* Use percentage to respect container padding */
+    width: 100% !important;
+    max-width: 350px;
+    min-width: 0;
     height: 40px;
     display: block;
-    margin: 0 auto 10px auto; /* Center horizontally */
+    margin: 0 auto 10px auto;
+    box-sizing: border-box;
+    border-radius: 8px;
   }
   input[type="range"] {
     width: 98vw !important;
