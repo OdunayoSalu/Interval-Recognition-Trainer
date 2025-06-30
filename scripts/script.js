@@ -65,13 +65,11 @@ async function initAudio() {
       source.connect(audioCtx.destination);
       source.start(0);
       
-      // Also play the correct sound silently to unlock it
-      correctAudio.volume = 0;
-      correctAudio.play().then(() => {
-        correctAudio.pause();
-        correctAudio.currentTime = 0;
-        correctAudio.volume = 1;
-      }).catch(e => console.log('Initial silent play failed (this is ok):', e));
+      // Previously we attempted to play the correct sound at zero volume to unlock iOS audio.
+      // This caused an audible blip on some devices. Instead, rely solely on the silent
+      // Web Audio buffer above to unlock the context. We will not touch the correctAudio
+      // instance until it needs to be played for real.
+      /* no-op: removed correctAudio silent unlock */
     };
     
     // Try to unlock audio immediately (works on most browsers)
@@ -216,9 +214,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   loadSettings();
   updateQuestionCounter();
   newQuestion();
-  initAudio().catch(error => {
-    console.error('Failed to initialize audio:', error);
-  });
+
 
   const settingsBtn = document.getElementById('settingsBtn');
   if (settingsBtn) {
