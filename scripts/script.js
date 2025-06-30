@@ -237,6 +237,7 @@ document.addEventListener('DOMContentLoaded', () => {
   startPlayingBtn.addEventListener('click', async () => {
     // 1. Initialize audio and mic. This click is the user interaction needed by browsers.
     await initAudio();
+    startMicAndAnalyser();
 
     // 2. Hide start button, show other buttons
     startPlayingBtn.style.display = 'none';
@@ -474,7 +475,8 @@ if (octaveAgnosticToggle) {
   });
 }
 
-navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
+function startMicAndAnalyser() {
+  navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
   const source = audioCtx.createMediaStreamSource(stream);
   const analyser = audioCtx.createAnalyser();
   analyser.fftSize = 2048;
@@ -592,7 +594,8 @@ navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
     requestAnimationFrame(draw);
   }
   draw();
-});
+  });
+}
 
 document.getElementById("checkAnswer").addEventListener("click", () => {
   if (targetSemitone === undefined) return;
