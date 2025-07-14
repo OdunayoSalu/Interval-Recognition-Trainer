@@ -489,9 +489,9 @@ function startMicAndAnalyser() {
     let rms = 0;
     for (let i = 0; i < SIZE; i++) rms += buf[i] * buf[i];
     rms = Math.sqrt(rms / SIZE);
-    if (rms < 0.01) return -1;
+    if (rms < 0.003) return -1;
 
-    let r1 = 0, r2 = SIZE - 1, threshold = 0.2;
+    let r1 = 0, r2 = SIZE - 1, threshold = 0.05;
     for (let i = 0; i < SIZE / 2; i++) {
       if (Math.abs(buf[i]) < threshold) {
         r1 = i;
